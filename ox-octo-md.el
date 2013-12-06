@@ -12,6 +12,11 @@
   :group 'org-export
   :version "24.2")
 
+(defcustom org-octo-md-comments "true"
+  "Default layout used in Octo-Md article."
+  :group 'org-export-octo-md
+  :type 'string)
+
 (defcustom org-octo-md-layout "post"
   "Default layout used in Octo-Md article."
   :group 'org-export-octo-md
@@ -56,6 +61,7 @@
     (inner-template . org-octo-md-inner-template)) ;; force body-only
   :options-alist
   '((:octo-md-layout "OCTO-MD_LAYOUT" nil org-octo-md-layout)
+    (:octo-md-comments "OCTO-MD_COMMENTS" nil org-octo-md-comments)
     (:octo-md-icon "OCTO-MD_ICON" nil org-octo-md-icon)
     (:octo-md-categories "OCTO-MD_CATEGORIES" nil org-octo-md-categories)
     (:octo-md-published "OCTO-MD_PUBLISHED" nil org-octo-md-published)))
@@ -114,7 +120,7 @@ holding export options."
         (published
          (org-octo-md--get-option info :octo-md-published org-octo-md-published))
         (comments
-         (org-octo-md--get-option info :octo-md-comments)))
+         (org-octo-md--get-option info :octo-md-comments  org-octo-md-comments)))
     (unless (equal published "true")
       (setq title (concat "[PREVIEW] " title)))
     (concat
@@ -252,6 +258,7 @@ Return output file name."
   (let ((layout     (or layout org-octo-md-layout))
         (published  (or published org-octo-md-published))
         (icon       (or published org-octo-md-icon))
+        (comments   (or published org-octo-md-comments))
         (categories (or categories org-octo-md-categories)))
     (save-excursion
       (insert (format (concat
@@ -261,6 +268,7 @@ Return output file name."
                        "\n#+OCTO-MD_LAYOUT: "     layout
                        "\n#+OCTO-MD_CATEGORIES: " categories
                        "\n#+OCTO-MD_ICON: "       icon
+                       "\n#+OCTO-MD_COMMENTS: "   comments
                        "\n#+OCTO-MD_PUBLISHED: "  published
                        "\n\n* \n\n{{{more}}}"))))))
 
